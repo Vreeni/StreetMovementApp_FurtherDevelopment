@@ -14,12 +14,11 @@ import android.widget.Button;
 
 /**
  * Fragment displaying two buttons offering the possibility to choose the setting of the training
- * => home, redirecting to the next fragment (Selection of level) and initiating the Home Workout flow
- * => outdoors, redirecting to the next fragment (Selection of level) and initiating the Outdoor Workout flow
+ * => home, redirecting to the next fragment (Selection of level) and initiating the training flow to get a customized home workout
+ * => outdoors, redirecting to the next fragment (Selection of level) and initiating the Outdoor training flow that lets you choose a specific location
  */
 public class Fragment_Training_Setting extends Fragment implements View.OnClickListener {
     private static final String LOG_TAG = "TrainingWorkoutSetting";
-    private Bundle bundle;
     private String activity;
 
 
@@ -64,13 +63,6 @@ public class Fragment_Training_Setting extends Fragment implements View.OnClickL
     @Override
     public void onStart() {
         super.onStart();
-//        TextView textView = new TextView(getContext());
-//
-//        backButton.setOnClickListener(click -> {
-//            ((AppCompatActivity)getContext()).getSupportFragmentManager().popBackStack();
-//        });
-
-
     }
 
 

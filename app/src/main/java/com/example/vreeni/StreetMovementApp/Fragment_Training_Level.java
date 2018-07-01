@@ -19,8 +19,8 @@ import com.google.firebase.storage.StorageReference;
  */
 
 /**
- * Fragment displaying options for different levels of Home Workouts (Beginner, Intermediate, Advanced)
- * calls workout from the database
+ * Fragment displaying options for different levels of trainings (Beginner, Intermediate, Advanced)
+ * calls a workout from the database
  * puts workout as parcelable object to a bundle and passes it on to the next fragment
  */
 public class Fragment_Training_Level extends Fragment implements View.OnClickListener {

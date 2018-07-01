@@ -196,6 +196,9 @@ public class Fragment_OutdoorActivity_MapView extends Fragment implements Activi
             activity = getArguments().getString("Activity");
             //setting is always outdoors as the map only offers outdoors training locations
             setting = "Outdoors";
+        } else {
+            activity = null;
+            setting = "Outdoors";
         }
     }
 

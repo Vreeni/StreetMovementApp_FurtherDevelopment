@@ -57,12 +57,12 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 
 /**
- * Fragment displaying the current Home Exercise that is being done as well as the timer with the remaining Home Workout time
+ * Fragment displaying the current Exercise that is being done as well as the timer with the remaining Home Workout time
  * contains webview with an embedded vimeo video
- * contains reference to the database => after timer has run out, adds Home Workout as a DocumentReference to a list of completed Home Workouts to the user profile
+ * contains reference to the database => after timer has run out, adds Training Activity as a DocumentReference to a list of completed Home Workouts to the user profile
  */
 public class Fragment_Training_Exercises extends Fragment implements View.OnClickListener {
-    private String TAG = "Workout: ";
+    private String TAG = "Training: ";
 
     //popup window views
     private PopupWindow popupWindow_activityCompleted;
@@ -71,7 +71,6 @@ public class Fragment_Training_Exercises extends Fragment implements View.OnClic
     //extra awards based on nr of activities/places etc.
 //    private ImageView iv_explorerStatus; //after having trained at 10 + different locations
 //    private ImageView iv_ninja; //after having completed 5+ movement specific challenges
-
 
     private ArrayList<Object> listOfHomeWks;
     private ArrayList<Object> listOfOutdoorWks;
@@ -772,9 +771,13 @@ public class Fragment_Training_Exercises extends Fragment implements View.OnClic
         btn_goToPersonalStats.setEnabled(true);
 //        int x = Resources.getSystem().getDisplayMetrics().widthPixels/2-150;
 //        int y = Resources.getSystem().getDisplayMetrics().heightPixels/2-100;
-        popupWindow_activityCompleted.showAtLocation(this.getView(), Gravity.CENTER, 0, 0);
-        dimBehind(popupWindow_activityCompleted);
-        Log.d(TAG, "opening a popup window");
+        try {
+            popupWindow_activityCompleted.showAtLocation(this.getView(), Gravity.CENTER, 0, 0);
+            dimBehind(popupWindow_activityCompleted);
+            Log.d(TAG, "opening a popup window");
+        } catch (Exception x) {
+            Log.d(TAG, "rootview destroyed before popup window was shown at location");
+        }
     }
 
 

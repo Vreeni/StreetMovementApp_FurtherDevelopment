@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -48,13 +49,13 @@ public class Fragment_Training_Warmup extends Fragment implements View.OnClickLi
     private String TAG = "Warmup: ";
 
     //silently transfer the bundle via this argument without displaying
-    private Bundle bundle;
     private TextView timer;
     private Button btn_skipWarmup;
     private Button btn_continueToExercises;
     private Button btn_startWarmup;
     private Button btn_cancelWarmup;
     private boolean isCancelled;
+    private long mLastClickTime = 0;
     private int time;
 
     //timer
@@ -190,6 +191,8 @@ public class Fragment_Training_Warmup extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         //clickable actions involving the timer
+//
+
         if (v.getId() == R.id.btn_workout_startWarmup) {
             if (warmupTimerState == WarmupTimerState.STOPPED) {
                 prefUtilsWarmupTimer.setStartedTime((int) getNow());

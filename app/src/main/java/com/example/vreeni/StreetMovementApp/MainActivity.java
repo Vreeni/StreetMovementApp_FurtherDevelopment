@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +40,6 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,10 +47,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +72,8 @@ public class MainActivity extends BaseActivity
     //Toolbar navigation/backbutton handling
     ActionBarDrawerToggle mDrawerToggle;
     private boolean mToolBarNavigationListenerIsRegistered = false;
-
+    private Toolbar toolbar;
+    private ImageView toolbarLogo;
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private String loginMethod;
@@ -86,7 +87,6 @@ public class MainActivity extends BaseActivity
     private enum PendingGeofenceTask {
         ADD, REMOVE, NONE
     }
-
 
     /**
      * Provides access to the Geofencing API.
@@ -126,7 +126,6 @@ public class MainActivity extends BaseActivity
         /*
          * Geofencing setup
          */
-
         geofenceMax = new GeofenceMaxNrHandler(this, this.getBaseContext(), null);
         // Get the UI widgets.
         mAddGeofencesButton = (Button) findViewById(R.id.add_geofences_button);
@@ -141,12 +140,15 @@ public class MainActivity extends BaseActivity
          * end of Geofencing on create
          */
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.app_name));
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+//        toolbar.setLogo(R.drawable.smlogo2_cut);
+        toolbarLogo = (ImageView) toolbar.findViewById(R.id.ic_toolbar_logo);
+
 
         // Sets the Toolbar to act as the ActionBar for this Activity window.
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Get DrawerLayout ref from layout
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         // Initialize ActionBarDrawerToggle, which will control toggle of hamburger.
@@ -185,7 +187,6 @@ public class MainActivity extends BaseActivity
         txtProfileName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = null;
                 if (v.getId() == R.id.profile_section) {
                     UserProfileFragment userprofile = UserProfileFragment.newInstance();
                     getSupportFragmentManager().beginTransaction()
@@ -217,13 +218,30 @@ public class MainActivity extends BaseActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onStart() {
         super.onStart();
+        //set click listener for home button (= street movement logo)
+        toolbarLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //street movement logo functioning as home button
+                HomeFragment home = HomeFragment.newInstance();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, home, "home")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
-        //check the week of the year for the weekly highschore list
-        checkWeek();
+        //uploading new exercises from the json file
+//        JSON_Handler_Exercises json_handler_exercises = new JSON_Handler_Exercises();
+//        json_handler_exercises.retrieveFileFromResource();
+//        json_handler_exercises.updateFirestore();
 
+
+        //check permissions for geofencing
         if (!checkPermissions()) {
             requestPermissions();
             Log.d(TAG, "on start - requesting permssions");
@@ -233,97 +251,6 @@ public class MainActivity extends BaseActivity
             performPendingGeofenceTask();
             Log.d(TAG, "performing pending geofence task");
         }
-    }
-
-    //CREATE A BACKGROUND SERVICE CHECKING THIS TASK ONCE A DAY
-
-    /**
-     * compare the week that is currently stored in the shared preferences (basically the last stored week nr) with the
-     * one received from a the calendar during the check
-     * => if it differs, update it in the shared preferences + reset the weekly high score counters
-     */
-    public void checkWeek() {
-        Calendar calender = Calendar.getInstance();
-        int week = calender.get(Calendar.WEEK_OF_YEAR);
-        if (PreferenceManager.getDefaultSharedPreferences(this).getInt("week", week) == week) {
-            //weekly high scores don't need to be set to 0
-            Log.d(TAG, "week: " + PreferenceManager.getDefaultSharedPreferences(this).getInt("week", week));
-        } else {
-            PreferenceManager.getDefaultSharedPreferences(this)
-                    .edit()
-                    .putInt("week", week)
-                    .apply();
-            //put weekly high score counter to 0 at the start of a new week
-            resetWeeklyHighscores();
-            Log.d(TAG, "week: " + PreferenceManager.getDefaultSharedPreferences(this).getInt("week", week));
-        }
-    }
-
-    public void resetWeeklyHighscores() {
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference scoreRef = db.collection("Scores").document(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        scoreRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                //initialize the field Nr Of Workouts and the list of places
-                int nrOfPlaces_weekly = 0;
-                ArrayList<Object> listOfPlaces_weekly = new ArrayList<>();
-                int nrOfWorkouts_weekly = 0;
-                int nrOfMuvChallenges_weekly = 0;
-                int nrOfSMChallenges_weekly = 0;
-
-                Map<String, Object> update = new HashMap<>();
-                //put the updated nr of workouts in the map that is to be uploaded to the database
-                update.put("nrOfPlaces_weekly", nrOfPlaces_weekly);
-                update.put("listOfPlaces_weekly", listOfPlaces_weekly);
-                update.put("nrOfWorkouts_weekly", nrOfWorkouts_weekly);
-                update.put("nrOfMovementSpecificChallenges_weekly", nrOfMuvChallenges_weekly);
-                update.put("nrOfStreetMovementChallenges_weekly", nrOfSMChallenges_weekly);
-
-                scoreRef.set(update, SetOptions.merge()).
-                        addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "New User Document has been saved");
-                            }
-                        }).
-                        addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "New User Document could not be saved");
-                            }
-                        });
-            } else {
-                //initialize the field Nr Of Workouts and the list of places
-                int nrOfPlaces_weekly = 0;
-                ArrayList<Object> listOfPlaces_weekly = new ArrayList<>();
-                int nrOfWorkouts_weekly = 0;
-                int nrOfMuvChallenges_weekly = 0;
-                int nrOfSMChallenges_weekly = 0;
-
-                Map<String, Object> update = new HashMap<>();
-                //put the updated nr of workouts in the map that is to be uploaded to the database
-                update.put("nrOfPlaces_weekly", nrOfPlaces_weekly);
-                update.put("listOfPlaces_weekly", listOfPlaces_weekly);
-                update.put("nrOfWorkouts_weekly", nrOfWorkouts_weekly);
-                update.put("nrOfMovementSpecificChallenges_weekly", nrOfMuvChallenges_weekly);
-                update.put("nrOfStreetMovementChallenges_weekly", nrOfSMChallenges_weekly);
-
-                scoreRef.set(update, SetOptions.merge()).
-                        addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "Leaderboard Entry has been saved");
-                            }
-                        }).
-
-                        addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "Leaderboard Entry could not be saved");
-                            }
-                        });
-            }
-        });
     }
 
 
@@ -668,14 +595,19 @@ public class MainActivity extends BaseActivity
         int groupId = item.getGroupId();
         int id = item.getItemId();
         Fragment fragment = null;
-        Bundle bundle = new Bundle();
         if (groupId == R.id.first_group) {
             //add new if statement here and in activity_main_drawer.xml to create a new navigation menu item
             if (id == R.id.home) {
                 fragment = new HomeFragment();
 //            getSupportActionBar().setSubtitle("Home"); //underneath the app name, there will appear a subtitle
-            } else if (id == R.id.training) {
+            } else if (id == R.id.menu_training) {
                 fragment = new Fragment_Training_ChooseActivity();
+            } else if (id == R.id.menu_edu) {
+                fragment = new Fragment_Education();
+            } else if (id == R.id.menu_spotmap) {
+                fragment = new Fragment_OutdoorActivity_MapView();
+            } else if (id == R.id.menu_shop) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://streetmovement.dk/shop")));
             }
         } else if (groupId == R.id.second_group) {
             if (id == R.id.fb) {
@@ -695,10 +627,16 @@ public class MainActivity extends BaseActivity
             } else if (id == R.id.youtube) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/user/StreetmovementDK")));
             }
+        } else {
+            if (id == R.id.menu_contact) {
+                //redirect to contact page
+            }
         }
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, fragment).replace(R.id.fragment_container, fragment).addToBackStack(null);
+            ft.replace(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null);
             ft.commit();
             ft.addToBackStack(null);
         }
@@ -720,15 +658,15 @@ public class MainActivity extends BaseActivity
                         .commit();
 
                 break;
-            case R.id.showMap:
-                String setting = "Outdoors";
-                String activity = null;
-                Fragment_OutdoorActivity_MapView fragment = Fragment_OutdoorActivity_MapView.newInstance(activity, setting);
-                (getSupportFragmentManager()).beginTransaction()
-                        .replace(R.id.fragment_container, fragment, "mapview")
-                        .addToBackStack(null)
-                        .commit();
-                break;
+//            case R.id.showMap:
+//                String setting = "Outdoors";
+//                String activity = null;
+//                Fragment_OutdoorActivity_MapView fragment = Fragment_OutdoorActivity_MapView.newInstance(activity, setting);
+//                (getSupportFragmentManager()).beginTransaction()
+//                        .replace(R.id.fragment_container, fragment, "mapview")
+//                        .addToBackStack(null)
+//                        .commit();
+//                break;
             case R.id.log_out_button:
                 logout();
                 break;
