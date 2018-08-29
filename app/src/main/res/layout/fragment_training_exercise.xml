@@ -3,15 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="2pt"
     android:orientation="vertical"
     android:weightSum="1">
 
 
-
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="0.8">
 
         <LinearLayout
@@ -22,26 +20,12 @@
             <TextView
                 android:id="@+id/exercise_StepByStep"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Exercise 1"
                 android:textSize="16sp"
                 android:textStyle="italic"/>
 
-
-            <TextView
-                android:id="@+id/exercise_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_gravity="center"
-                android:text="5 x 5 Pullups"
-                android:textStyle="bold"/>
 
 
             <FrameLayout
@@ -52,7 +36,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
                 android:orientation="vertical">
 
 
@@ -65,56 +48,74 @@
 
             </LinearLayout>
 
-                <TextView
-                    android:id="@+id/workoutCompletedText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="125dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="You have completed your workout -
-Good job!"
-                    android:textStyle="bold"
-                    android:visibility="invisible"/>
 
             </FrameLayout>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:gravity="center"
-                android:text="Time to complete this exercise:"
-                android:textStyle="bold"/>
-
-            <Button
-                android:id="@+id/continueToNextEx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimaryDark"
-                android:text="Continue with the next exercise" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_alignParentBottom="true"
-                android:id="@+id/linearLayout">
+                android:orientation="horizontal"
+                android:weightSum="5">
 
                 <TextView
+                    android:id="@+id/exercise_description"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:text="5 x 5 Pullups"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/continueToNextEx"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Exercise complete" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/workoutCompletedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="125dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="You have completed your workout -
+Good job!"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:text="Time to complete this exercise:"-->
+            <!--android:textStyle="bold"/>-->
+
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginTop="2dp"
+        android:layout_weight="0.2">
+
+
+        <TextView
                     android:id="@+id/tv_timer_noticetext"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+            android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginLeft="8dp"
@@ -122,40 +123,41 @@ Good job!"
                     android:text="Noticetext:"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/workoutTimer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_gravity="center"
-                    android:text="Timer"
-                    android:textSize="32sp"
-                    android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/workoutTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Timer"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btn_workout_startWk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Go" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-                <Button
-                    android:id="@+id/btn_workout_stopWk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Cancel" />
+            <Button
+                android:id="@+id/btn_workout_startWk"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Go" />
 
-            </LinearLayout>
-
+            <Button
+                android:id="@+id/btn_workout_stopWk"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Cancel" />
 
         </LinearLayout>
 
 
-    </ScrollView>
-
+    </LinearLayout>
 
 </LinearLayout>

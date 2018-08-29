@@ -1,42 +1,37 @@
 package com.example.vreeni.StreetMovementApp;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static android.content.Context.MODE_PRIVATE;
-import static android.view.View.getDefaultSize;
-import static com.example.vreeni.StreetMovementApp.User.LISTOFHOMEWORKOUTS;
-import static com.example.vreeni.StreetMovementApp.User.WORKOUTSCOMPLETED;
-import static com.github.mikephil.charting.charts.Chart.LOG_TAG;
+import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -48,12 +43,15 @@ public class Tab_Overview_Fragment extends Fragment implements View.OnClickListe
     private long mLastClickTime = 0;
     private TextView tv_name;
     private TextView tv_description;
+    private TextView tv_smc_description;
     private Button btn_inSpotViewTabTrainHere;
+    private Button btn_inSpotViewTabShare;
 
     private String activity;
     private String setting;
     private ParkourPark pk;
     private Location mLastKnownLocation;
+    private String name_SMC;
 
 
     public static Tab_Overview_Fragment newInstance(String act, String set, ParkourPark spot, Location mLastKnownLocation) {
@@ -86,25 +84,72 @@ public class Tab_Overview_Fragment extends Fragment implements View.OnClickListe
         return inflater.inflate(R.layout.tab_fragment_description, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tv_name = (TextView) view.findViewById(R.id.tv_parkourpark_name);
         tv_description = (TextView) view.findViewById(R.id.tv_parkourpark_description);
+        tv_smc_description = (TextView) view.findViewById(R.id.tv_smc_description);
         btn_inSpotViewTabTrainHere = (Button) view.findViewById(R.id.btn_inSpotViewTabTrainHere);
+        btn_inSpotViewTabShare = (Button) view.findViewById(R.id.btn_inSpotViewTabShareSpot);
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+
         tv_name.setText(pk.getName());
-        tv_description.setText("test");
+        tv_description.setText(pk.getDescription());
+
+        if ((activity != null) && (activity.equals("Street Movement challenge"))) {
+            try {
+                getSMCInfo();
+            } catch (FirebaseException e) {
+                e.printStackTrace();
+            }
+            btn_inSpotViewTabTrainHere.setText("Go to challenge");
+        } else {
+        }
         btn_inSpotViewTabTrainHere.setOnClickListener(this);
+        btn_inSpotViewTabShare.setOnClickListener(this);
         Log.d(TAG, "passed parkourpark - parkDescription " + pk.getName());
 
 //        backButton.setOnClickListener(click -> {
 //            ((AppCompatActivity)getContext()).getSupportFragmentManager().popBackStack();
 //        });
+    }
+
+    public void getSMCInfo() throws FirebaseException {
+        try {
+            final FirebaseFirestore db = FirebaseFirestore.getInstance();
+            final CollectionReference smcsRef = db.collection("StreetMovementChallenges");
+            DocumentReference pkRef = db.collection("ParkourParks").document(pk.getName());
+
+            //query to get all documents that both home workouts and suited for beginners
+            com.google.firebase.firestore.Query query = smcsRef.whereEqualTo("location", pkRef);
+            query.get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot documentSnapshots) {
+                            // Get the first document
+                            DocumentSnapshot first = documentSnapshots.getDocuments().get(0);
+                            name_SMC = first.getString("description_short");
+                            tv_smc_description.setVisibility(View.VISIBLE);
+                            tv_smc_description.setText(name_SMC);
+                            final CollectionReference smcRef_singleChallenge = db.collection(first.toString());
+                        }
+                    });
+            if (name_SMC == null) {
+                throw new FirebaseException("Exception: Activity is not a Street Movement challenge.");
+            }
+        } catch (FirebaseException ex) {
+            Log.d(TAG, "Exception: ", ex);
+        }
+        Log.d(activity, "executed");
     }
 
     @Override
@@ -135,6 +180,16 @@ public class Tab_Overview_Fragment extends Fragment implements View.OnClickListe
             return;
         }
         mLastClickTime = SystemClock.elapsedRealtime();
+        if (v.getId() == R.id.btn_inSpotViewTabShareSpot) {
+            //share link to spot on SoMe
+            Location trainingLocation = new Location("provider");
+            trainingLocation.setLatitude(pk.getCoordinates().getLatitude());
+            trainingLocation.setLongitude(pk.getCoordinates().getLongitude());
+            String maps_link_generic = "https://maps.google.com/?q=";
+            String maps_link_coordinates = maps_link_generic + pk.getCoordinates().getLatitude() + "," + pk.getCoordinates().getLongitude();
+            shareText(btn_inSpotViewTabShare, maps_link_coordinates);
+
+        }
         if (v.getId() == R.id.btn_inSpotViewTabTrainHere) {
             //convert the parkour park's geolocation to a location object
             Location trainingLocation = new Location("provider");
@@ -149,7 +204,7 @@ public class Tab_Overview_Fragment extends Fragment implements View.OnClickListe
                 if (mLastKnownLocation.distanceTo(trainingLocation) < 750) { //for testing just make it bigger or the other way round
                     if (activity.equals("Street Movement challenge")) {
                         //see the street movement challenge connected to the specific spot
-                        Fragment_Training_VejstrupLevelGame vejstrup = Fragment_Training_VejstrupLevelGame.newInstance(activity, setting, pk);
+                        Fragment_Training_SMC_WOPVejstrup vejstrup = Fragment_Training_SMC_WOPVejstrup.newInstance(activity, setting, pk);
                         ((AppCompatActivity) getContext()).getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, vejstrup, "vejstrup")
                                 .addToBackStack("vejstrup")
@@ -192,4 +247,14 @@ public class Tab_Overview_Fragment extends Fragment implements View.OnClickListe
 
         }
     }
+
+    public void shareText(View view, String link) {
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        String shareBodyText = "Let's train here: " + link;
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject/Title");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, shareBodyText);
+        startActivity(Intent.createChooser(intent, "Choose sharing method"));
+    }
+
 }

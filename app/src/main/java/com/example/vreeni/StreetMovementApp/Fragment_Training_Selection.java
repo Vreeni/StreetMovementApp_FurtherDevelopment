@@ -1,21 +1,26 @@
 package com.example.vreeni.StreetMovementApp;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import io.supercharge.shimmerlayout.ShimmerLayout;
 
 
 /**
@@ -25,6 +30,11 @@ import java.util.ArrayList;
  */
 public class Fragment_Training_Selection extends Fragment {
     private static final String LOG_TAG = "Result";
+
+    //3 global variables handling the skeleton screens
+    public LinearLayout skeletonLayout;
+    public ShimmerLayout shimmer;
+    public LayoutInflater inflater;
 
     private RecyclerView recycler;
     private RecyclerView.LayoutManager manager;
@@ -80,7 +90,14 @@ public class Fragment_Training_Selection extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        skeletonLayout = view.findViewById(R.id.skeletonLayout);
+        shimmer = view.findViewById(R.id.shimmerSkeleton);
+        this.inflater = (LayoutInflater) getActivity()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         recycler = view.findViewById(R.id.exercises_selection_recyclerView);
+        recycler.setVisibility(View.GONE);
         recycler.setHasFixedSize(true);
         manager = new GridLayoutManager(this.getContext(), 1, GridLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(manager);
@@ -94,9 +111,11 @@ public class Fragment_Training_Selection extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(LOG_TAG, "training info" + activity + setting + level);
+        Log.d(LOG_TAG, "training info: " + activity + setting + level);
 
         context = this.getContext();
+
+        showSkeleton(true);
 
         FirebaseQuery_Workout query = new FirebaseQuery_Workout(activity, setting, level);
         query.query(new FirebaseCallback_Workout() {
@@ -159,6 +178,8 @@ public class Fragment_Training_Selection extends Fragment {
             public void onQuerySuccess(ArrayList<Exercise> exercises) {
                 list = exercises;
 
+                animateReplaceSkeleton(recycler);
+
                 RecyclerViewClickListener listener = (view, position) -> {
                 };
 
@@ -171,6 +192,58 @@ public class Fragment_Training_Selection extends Fragment {
             }
         });
         return list;
+    }
+
+    public void showSkeleton(boolean show) {
+
+        if (show) {
+
+//            skeletonLayout.removeAllViews();
+            skeletonLayout.removeAllViewsInLayout();
+
+            int skeletonRows = getSkeletonRowCount(this.context);
+            for (int i = 0; i <= skeletonRows; i++) {
+                ViewGroup rowLayout = (ViewGroup) inflater
+                        .inflate(R.layout.skeleton_row_layout_exercises, null);
+                skeletonLayout.addView(rowLayout);
+            }
+            shimmer.setVisibility(View.VISIBLE);
+            shimmer.startShimmerAnimation();
+            skeletonLayout.setVisibility(View.VISIBLE);
+            skeletonLayout.bringToFront();
+        } else {
+            shimmer.stopShimmerAnimation();
+            shimmer.setVisibility(View.GONE);
+        }
+    }
+
+    public int getSkeletonRowCount(Context context) {
+        int pxHeight = getDeviceHeight(context);
+        int skeletonRowHeight = (int) getResources()
+                .getDimension(R.dimen.row_layout_height); //converts to pixel
+        return (int) Math.ceil(pxHeight / skeletonRowHeight);
+    }
+
+    public int getDeviceHeight(Context context) {
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        return metrics.heightPixels;
+    }
+
+
+    public void animateReplaceSkeleton(View listView) {
+
+        listView.setVisibility(View.VISIBLE);
+        listView.setAlpha(0f);
+        listView.animate().alpha(1f).setDuration(1000).start();
+
+        skeletonLayout.animate().alpha(0f).setDuration(1000).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                showSkeleton(false);
+            }
+        }).start();
+
     }
 }
 

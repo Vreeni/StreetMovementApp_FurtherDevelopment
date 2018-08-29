@@ -21,13 +21,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +55,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.supercharge.shimmerlayout.ShimmerLayout;
+
 
 /**
  * Main Activity of this application
@@ -68,6 +73,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnCompleteListener<Void> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
 
     //Toolbar navigation/backbutton handling
     ActionBarDrawerToggle mDrawerToggle;
@@ -215,6 +221,7 @@ public class MainActivity extends BaseActivity
                 ft.addToBackStack(null);
             }
         }
+
     }
 
 
@@ -222,6 +229,8 @@ public class MainActivity extends BaseActivity
     @Override
     public void onStart() {
         super.onStart();
+
+
         //set click listener for home button (= street movement logo)
         toolbarLogo.setOnClickListener(new View.OnClickListener() {
             @Override

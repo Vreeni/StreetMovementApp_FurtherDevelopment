@@ -12,6 +12,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">   <!-- android:theme="@style/ThemeOverlay.AppCompat.Dark"> -->
 
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:weightSum="4">-->
+
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="2"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
+
 
     <ImageView
         android:id="@+id/imageView"
@@ -38,5 +51,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/menu_header_subtitle" />
+
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="2"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:weightSum="4"-->
+    <!--android:orientation="vertical">-->
+    <!---->
+    <!--<ImageView-->
+    <!--android:id="@+id/ic_profilesection_stats"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:adjustViewBounds="true"-->
+    <!--android:layout_gravity="right"-->
+    <!--android:contentDescription="@string/menu_header_image"-->
+    <!--android:src="@drawable/ic_weights"-->
+    <!--app:srcCompat="@drawable/ic_weights" />-->
+    <!---->
+    <!--<ImageView-->
+    <!--android:id="@+id/ic_profilesection_leaderboard"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:adjustViewBounds="true"-->
+    <!--android:layout_gravity="right"-->
+    <!--android:contentDescription="@string/menu_header_image"-->
+    <!--android:src="@drawable/ic_leaderboard_simple"-->
+    <!--app:srcCompat="@drawable/ic_leaderboard_simple" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
 
 </LinearLayout>

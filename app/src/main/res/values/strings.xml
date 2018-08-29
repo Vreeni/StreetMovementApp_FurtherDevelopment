@@ -32,14 +32,27 @@
     <!--MENU-1st Category + 1st Category Item names-->
     <string name="menu_cat1_item1">Home</string>
     <string name="menu_cat1_item2">Training</string>
-    <string name="menu_cat1_item3">Shop</string>
-    <string name="menu_cat1_item4">Contact</string>
+    <string name="menu_cat1_item3">Education</string>
+    <string name="menu_cat1_item4">Spotmap</string>
+    <string name="menu_cat1_item5">Shop</string>
 
     <!--MENU-2nd Category + 2nd Category Item names-->
     <string name="menu_category2">Follow us on social media</string>
     <string name="menu_cat2_item1">Facebook</string>
     <string name="menu_cat2_item2">Instagram</string>
     <string name="menu_cat2_item3">YouTube</string>
+
+
+    <!--MENU-3rd Category + 3rd Category Item names-->
+    <string name="menu_cat3_item1">Contact</string>
+
+
+    <!--EDUCATION Fragment activity descriptions-->
+    <string name="edu_workout">Workouts refer to the overall building of physical strength</string>
+    <string name="edu_movSpecChallenge">The focus of movement specific challenges is on teaching you specific movement sequences or combinations of movements.</string>
+    <string name="edu_streetMovChallenge">Street Movement challenges are created by us for you to bring you an understanding of movement beyond the physical part.
+        They can be mental challenges, partner exercises, games, location-specific, etc
+        They can be further divided into regular and in-class (for Street Movement classes participants only).</string>
 
 
     <string name="label_google_sign_in">Firebase + Google Sign In</string>
@@ -177,6 +190,14 @@
 
     <!--<string name="permission_rationale">Location permission is needed for core functionality</string>-->
     <!--<string name="permission_denied_explanation">Permission was denied, but is needed for core-->
-        <!--functionality.</string>-->
+    <!--functionality.</string>-->
     <string name="settings">Settings</string>
+
+
+    <string name="bulleted_list_homescreen">
+        <li>Strength training &amp; conditioning</li>\n
+        <li>Movement specific exercises</li>\n
+        <li>Parkour</li>
+    </string>
+
 </resources>

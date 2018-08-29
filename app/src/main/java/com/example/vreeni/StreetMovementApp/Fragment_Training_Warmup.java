@@ -12,10 +12,16 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +60,8 @@ public class Fragment_Training_Warmup extends Fragment implements View.OnClickLi
     private Button btn_continueToExercises;
     private Button btn_startWarmup;
     private Button btn_cancelWarmup;
+    private WebView webView;
+
     private boolean isCancelled;
     private long mLastClickTime = 0;
     private int time;
@@ -117,6 +125,9 @@ public class Fragment_Training_Warmup extends Fragment implements View.OnClickLi
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //including the webview - vimeo video
+        webView = (WebView) view.findViewById(R.id.webView_warmup);
+
         //silently transfer the bundle via this argument without displaying
         time = 60;
         timer = (TextView) view.findViewById(R.id.warmuptimer);
@@ -138,6 +149,9 @@ public class Fragment_Training_Warmup extends Fragment implements View.OnClickLi
     @Override
     public void onStart() {
         super.onStart();
+
+        //warmup inspiration video - setup a link for that on the DB
+        setupVideo("https://player.vimeo.com/video/249822484");
 
         prefUtilsWarmupTimer = new PrefUtilsWarmupTimer(getApplicationContext());
 
@@ -410,6 +424,28 @@ public class Fragment_Training_Warmup extends Fragment implements View.OnClickLi
     private enum WarmupTimerState {
         STOPPED,
         RUNNING
+    }
+
+    public void setupVideo(String vidEx1) {
+        //set up the webview - vimeo vide
+        webView.setInitialScale(1);
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        webView.getSettings().setPluginState(WebSettings.PluginState.ON_DEMAND);
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displaymetrics);
+        int height = displaymetrics.heightPixels;
+        int width = displaymetrics.widthPixels;
+        Log.e("WebView Log", width + "-" + height);
+        String data_html = "<!DOCTYPE html><html> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"target-densitydpi=high-dpi\" /> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <link rel=\"stylesheet\" media=\"screen and (-webkit-device-pixel-ratio:1.5)\" href=\"hdpi.css\" /></head> <body style='background:white;margin:0;padding:0;'> <iframe style=\"background:white;\" width=' " + width + "' height='" + height / 2 + "' src=\"" + vidEx1 + "\" frameborder=\"0\"></iframe> </body> </html> ";
+        webView.loadDataWithBaseURL("http://vimeo.com", data_html, "text/html", "UTF-8", null);
+
+        //end of webview
     }
 
 }

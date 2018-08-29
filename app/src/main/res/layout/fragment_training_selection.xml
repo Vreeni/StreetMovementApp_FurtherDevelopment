@@ -2,21 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="8dp"
+    android:layout_margin="4dp"
     android:orientation="vertical">
 
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:orientation="vertical">
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -31,7 +29,15 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1pt"
-                android:background="#58C1E8"></View>
+                android:background="#16A085">
+
+            </View>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -43,6 +49,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:weightSum="9"
+                    android:background="@color/grey_100"
+                    android:padding="8dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -83,65 +91,87 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1pt"
-                    android:background="#58C1E8"></View>
+                    android:background="#16A085">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/exercises_selection_recyclerView"
+                </View>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="vertical">
+
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <include layout="@layout/skeleton_shimmer_layout" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/exercises_selection_recyclerView"
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
+                            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+                    </FrameLayout>
+
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1pt"
+                    android:background="#16A085">
+
+                </View>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Time to complete this workout:"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="x minutes"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Press continue for more information on the individual exercises and to start your workout."
+                    android:textStyle="normal" />
+
+
+                <Button
+                    android:id="@+id/btn_predef_homeworkout_SelectionContinue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:text="Continue" />
+
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1pt"
-                android:background="#58C1E8"></View>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Time to complete this workout:"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="x minutes"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Press continue for more information on the individual exercises and to start your workout."
-                android:textStyle="normal" />
-
-
-            <Button
-                android:id="@+id/btn_predef_homeworkout_SelectionContinue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:text="Continue" />
-
-
-        </LinearLayout>
-
-    </ScrollView>
 
 </LinearLayout>

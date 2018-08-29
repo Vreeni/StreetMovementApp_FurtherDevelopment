@@ -5,9 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 
 /**
@@ -16,6 +18,9 @@ import android.view.ViewGroup;
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private Context context;
+
+    private Button btn_eventtester;
+
 
     public static HomeFragment newInstance() {
         final Bundle bundle = new Bundle();
@@ -50,6 +55,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        btn_eventtester = view.findViewById(R.id.events_button);
     }
 
 
@@ -57,6 +63,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         ((MainActivity) getActivity()).showBackButton(false);
+
+        btn_eventtester.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment_Events fragment_events = Fragment_Events.newInstance();
+                ((AppCompatActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, fragment_events, "events")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
     }
 
     @Override
@@ -82,6 +100,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
     }
 
 }

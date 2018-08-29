@@ -143,6 +143,7 @@ public class Fragment_Training_Exercises extends Fragment implements View.OnClic
 
         ex1 = (TextView) view.findViewById(R.id.exercise_description);
 
+
         //including the webview - vimeo vide
         webView = (WebView) view.findViewById(R.id.webView);
 

@@ -15,7 +15,6 @@ import java.util.HashMap;
  * Implementing Parcelable Interface allowing for Workout objects to be put as parcelables in bundles
  */
 public class Workout implements Parcelable {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String name;
     private String activity;
@@ -24,9 +23,6 @@ public class Workout implements Parcelable {
     private int duration;
 
     private ArrayList<Object> listOfExercises = new ArrayList<>();
-
-
-
 
     public Workout() {
     }

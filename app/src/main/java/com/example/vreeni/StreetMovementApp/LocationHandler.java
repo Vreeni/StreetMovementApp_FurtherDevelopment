@@ -212,9 +212,13 @@ public class LocationHandler extends MainActivity implements  ActivityCompat.OnR
     public void stopTrackingLocation() {
         if (mTrackingLocation) {
             mTrackingLocation = false;
-            mLastKnownLocation.setLatitude(0);
-            mLastKnownLocation.setLongitude(0);
-            updateLocationUI(mLastKnownLocation); //updating the location UI based on a null value, which leads to the recentering around a defaultLocation (StreetMekka)
+
+            Location location = new Location("");//provider name is unnecessary
+            location.setLatitude(0);//your coords of course
+            location.setLongitude(0);
+//            mLastKnownLocation.setLatitude(0); this will return a nullpointer exception when view is destroyed
+//            mLastKnownLocation.setLongitude(0);
+            updateLocationUI(location); //updating the location UI based on a null value, which leads to the recentering around a defaultLocation (StreetMekka)
             Log.d(LOG_TAG, "location tracking disabled. Location set to 0.");
 //            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }

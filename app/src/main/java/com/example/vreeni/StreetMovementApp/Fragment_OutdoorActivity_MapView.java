@@ -270,6 +270,66 @@ public class Fragment_OutdoorActivity_MapView extends Fragment implements Activi
 
 
     /**
+     * this gets called everytime after a pause.
+     * The RequestingPermission DialogField is causing the fragment to pause, so all actions that are to continue based on granting or denying permission, are handled here
+     * if boolean is true and permission is granted, location tracking is started/continued
+     * if boolean is false, the location UI will be updated accordingly (location is set to 0, camera is centered around DefaultLocation)
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+        Log.d(LOG_TAG, "on resume");
+        if (mTrackingLocation && locationHandler.checkPermissions()) {
+            Log.d(LOG_TAG, "permission checked " + locationHandler.checkPermissions());
+            locationHandler.startTrackingLocation(); //includes updating the location UI
+
+        } else
+            updateLocationUI(locationHandler.getmLastKnownLocation()); //updating the location UI based on a null value, which leads to the recentering around a defaultLocation (StreetMekka)
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
+    /**
+     * fragment is set to pause, whenever a dialog pops up
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+//        if (mTrackingLocation) {
+//            stopTrackingLocation();
+//            mTrackingLocation = true;
+//        }
+        Log.d(LOG_TAG, "on Pause");
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+        locationHandler.stopTrackingLocation();
+        Log.d(LOG_TAG, "location updates stopped");
+    }
+
+
+    /**
      * create new arrayLists for listOfPkMarkers and listOfCaliMarkers and a new HashMap to identify marker and the respective parkour park object
      * set googleMap properties (mapType, ClickListeners)
      * get location permission from user
@@ -1108,53 +1168,8 @@ public class Fragment_OutdoorActivity_MapView extends Fragment implements Activi
     }
 
 
-    /**
-     * this gets called everytime after a pause.
-     * The RequestingPermission DialogField is causing the fragment to pause, so all actions that are to continue based on granting or denying permission, are handled here
-     * if boolean is true and permission is granted, location tracking is started/continued
-     * if boolean is false, the location UI will be updated accordingly (location is set to 0, camera is centered around DefaultLocation)
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-        Log.d(LOG_TAG, "on resume");
-        if (mTrackingLocation && locationHandler.checkPermissions()) {
-            Log.d(LOG_TAG, "permission checked " + locationHandler.checkPermissions());
-            locationHandler.startTrackingLocation(); //includes updating the location UI
-
-        } else
-            updateLocationUI(locationHandler.getmLastKnownLocation()); //updating the location UI based on a null value, which leads to the recentering around a defaultLocation (StreetMekka)
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
-    }
-
-    /**
-     * fragment is set to pause, whenever a dialog pops up
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
-//        if (mTrackingLocation) {
-//            stopTrackingLocation();
-//            mTrackingLocation = true;
-//        }
-        Log.d(LOG_TAG, "on Pause");
-    }
 
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-        locationHandler.stopTrackingLocation();
-        Log.d(LOG_TAG, "location updates stopped");
-    }
 
     public static GeoPoint calculateGeoPoint(double latitude, double longitude) {
         return new GeoPoint(latitude, longitude);

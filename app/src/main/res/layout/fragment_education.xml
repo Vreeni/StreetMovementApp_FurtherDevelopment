@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:text="Check out our exercise library" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1pt"
+                android:background="#16A085"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="4dp"
+                android:paddingBottom="2dp"
+                android:weightSum="8">
+
+                <ImageView
+                    android:id="@+id/iv_edu_workout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:padding="1dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/womanhanging" />
+
+                <Button
+                    android:id="@+id/btn_edu_workout"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_marginLeft="-5dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:text="Workout"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="1dp"
+                android:paddingBottom="2dp"
+                android:weightSum="8">
+
+                <ImageView
+                    android:id="@+id/iv_edu_movementSpecificChallenge"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:adjustViewBounds="true"
+                    android:paddingBottom="1dp"
+                    android:paddingTop="1.25dp"
+                    android:src="@drawable/johansoro" />
+
+                <Button
+                    android:id="@+id/btn_edu_movSpecChallenge"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_marginLeft="-5dp"
+                    android:layout_weight="5"
+
+                    android:text="Movement specific challenge"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:weightSum="8">
+
+                <ImageView
+                    android:id="@+id/iv_edu_streetMovementChallenge"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:adjustViewBounds="true"
+                    android:padding="1dp"
+                    android:src="@drawable/smchallenge" />
+
+                <Button
+                    android:id="@+id/btn_edu_streetMovChallenge"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_marginLeft="-5dp"
+                    android:layout_weight="5"
+                    android:text="Street Movement challenge"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
+
+    <!--Button with other background color
+    android:backgroundTint="@color/button_green_background_tint"-->
+
+

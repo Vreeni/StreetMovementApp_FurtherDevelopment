@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 
 
 android {
+
+
 //    signingConfigs {
 //        key{
 //            keyAlias 'androiddebugkey'
@@ -23,6 +25,10 @@ android {
         multiDexEnabled true
 
     }
+
+    //for calendar, http import
+    useLibrary 'org.apache.http.legacy'
+
     buildTypes {
         release {
             minifyEnabled true
@@ -97,8 +103,8 @@ dependencies {
     //recycler view
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
-
-
+    //shimmer effect for skeleton screen
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
 
 
 }

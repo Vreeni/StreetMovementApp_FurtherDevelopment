@@ -8,20 +8,25 @@
             android:icon="@drawable/ic_home_black"
             android:title="@string/menu_cat1_item1" />
         <item
-            android:id="@+id/training"
+            android:id="@+id/menu_training"
             android:checkable="true"
             android:icon="@drawable/ic_weights"
             android:title="@string/menu_cat1_item2" />
         <item
-            android:id="@+id/shop"
+            android:id="@+id/menu_edu"
             android:checkable="true"
-            android:icon="@drawable/ic_shoppingcart"
+            android:icon="@drawable/ic_edu"
             android:title="@string/menu_cat1_item3" />
         <item
-            android:id="@+id/contact"
+            android:id="@+id/menu_spotmap"
             android:checkable="true"
-            android:icon="@drawable/ic_contact"
+            android:icon="@drawable/ic_map"
             android:title="@string/menu_cat1_item4" />
+        <item
+            android:id="@+id/menu_shop"
+            android:checkable="true"
+            android:icon="@drawable/ic_shoppingcart"
+            android:title="@string/menu_cat1_item5" />
     </group>
 
     <item android:title="Follow us on social media">
@@ -54,4 +59,12 @@
             </group>
         </menu>
     </item>
+    <group android:id="@+id/third_group">
+        <!--add new item part here and in MainActivity.java to create a new navigation menu item-->
+        <item
+            android:id="@+id/menu_contact"
+            android:checkable="true"
+            android:icon="@drawable/ic_contact"
+            android:title="@string/menu_cat3_item1" />
+    </group>
 </menu>

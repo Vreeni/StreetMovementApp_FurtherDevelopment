@@ -8,21 +8,53 @@
     tools:context="com.example.vreeni.StreetMovementApp.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"> <!--change styles-->
+        app:elevation="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">       <!--elevation 0 removes shadow behind app bar-->
+
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:layout_height="?android:attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <!--app:layout_scrollFlags="scroll|enterAlways-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="4">
 
 
+                <ImageView
+                    android:id="@+id/ic_toolbar_logo"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:src="@drawable/smlogo2_cut" />
+
+                <TextView
+                    android:id="@+id/tv_toolbar_text"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="16sp"
+                    android:text="Street Movement" />
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
-
 
 </android.support.design.widget.CoordinatorLayout>
